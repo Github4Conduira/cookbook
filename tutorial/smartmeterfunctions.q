@@ -319,6 +319,8 @@ usagereport:{[startdate;enddate;regionfilter;custfilter;groupings;pivot]
  meterwc:(enlist (within;`date;(enlist;startdate;enddate+1))) , $[count ids; enlist (in;`meterid;enlist ids);()];
  show "#######meterwc:######";
  show meterwc;
+ show "####enlist meterwc######";
+ show enlist meterwc;
  show "###.q.first###";
  show .q.first;
  show "###enlist(.q.first;`usage)####";
@@ -357,7 +359,7 @@ usagereport:{[startdate;enddate;regionfilter;custfilter;groupings;pivot]
 
  /- these are the aggregations we want to calculate (if we are aggregating)
  aggs:`meterreadings`maxusage`minusage`avgusage`totalusage!((count;`usage);(max;`usage);(min;`usage);(avg;`usage);(sum;`usage));
- show "#### Aggregation#####"
+ show "#### Aggregation#####";
  show aggs;
  /- -1"aggs:"aggs;
  /- -1"use:"use;
