@@ -87,7 +87,8 @@ ws.onmessage = function (event) {
     var edata = JSON.parse(deserialize(event.data)),
         name  = edata.name,
         data  = edata.data;
-
+    console.log("name:",name);
+    console.log("data:",data);
     // Enable submit button 
     $('#submit').attr("disabled",false);
     

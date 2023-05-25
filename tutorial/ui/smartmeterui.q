@@ -11,6 +11,7 @@ format:{[name;data]
 
 // Is run against data recieved
 execdict:{
+  show x;
   $[all `start_date`end_date`region_filter`custtype_filter`grouping`pivot in key x;
     [
       sd:"D"$x[`start_date];
@@ -21,7 +22,17 @@ execdict:{
       cf:$[any raze null each x[`custtype_filter];();`$x[`custtype_filter]];
 
       // Run function using params
-      data:.[{[sd;ed;rf;cf;gr;pv] timeit[`usagereport;(sd;ed;rf;cf;gr;pv);outputrows]};(sd;ed;rf;cf;gr;pv);{'"Didn't execute due to ",x}]; 
+      data:.[
+        {
+          [sd;ed;rf;cf;gr;pv] timeit[`usagereport;(sd;ed;rf;cf;gr;pv);
+          outputrows]
+        };
+        (sd;ed;rf;cf;gr;pv);
+        {
+          '"Didn't execute due to ",
+          x
+        }
+          ]; 
 
       // Send formatted table
       format[`table;(`time`rows`data)!data]

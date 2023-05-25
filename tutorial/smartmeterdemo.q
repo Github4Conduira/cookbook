@@ -11,6 +11,9 @@
 
 /- Load the HDB
 hdbdir:$[0=count .z.x;"./smartmeterDB";.z.x 0]
+
+0N!count .z.x;
+-1 hdbdir;
 @[system;"l ",hdbdir;{-1"Failed to load specified hdb ",x,": ",y;exit 1}[hdbdir]]
 
 /- turn on garbage collection

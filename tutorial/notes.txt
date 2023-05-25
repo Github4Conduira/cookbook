@@ -1,0 +1,5 @@
+After running q buildsmartmeterdb.q and go[]
+
+2023.05.25T10:31:14.656 HDB successfully built in directory :./smartmeterDB
+2023.05.25T10:31:14.658 Time taken to generate and store 878.40 million rows was 00:01:07
+2023.05.25T10:31:14.658 or 13.11 million rows per second

@@ -72,12 +72,17 @@ function deserialize(x){
     return A;}
   return r();}
 
-function serialize(x){var a=1,pos=0,ub,bb=new Uint8Array(8),ib=new Int32Array(bb.buffer),fb=new Float64Array(bb.buffer);
+function serialize(x){
+  console.log("x:",x);
+  var a=1,pos=0,ub,bb=new Uint8Array(8),ib=new Int32Array(bb.buffer),fb=new Float64Array(bb.buffer);
   function toType(obj){return ({}).toString.call(obj).match(/\s([a-z|A-Z]+)/)[1].toLowerCase();};
   function getKeys(x){var v=[];for(var o in x)v.push(o);return v;}
   function getVals(x){var v=[];for(var o in x)v.push(x[o]);return v;}
   function calcN(x,dt){
     var t=dt?dt:toType(x);
+    console.log("toType:",toType(x));
+    console.log("t:",t);
+    console.log("x.length()",x.length);
     switch(t){
       case'null':return 2;
       case'object':return 1+calcN(getKeys(x),'symbols')+calcN(getVals(x),null);
@@ -104,7 +109,10 @@ function serialize(x){var a=1,pos=0,ub,bb=new Uint8Array(8),ib=new Int32Array(bb
       case 'array':{wb(0);wb(0);ib[0]=x.length;wn(4);for(var i=0;i<x.length;i++)w(x[i],null);}break;
       case 'symbols':{wb(0);wb(0);ib[0]=x.length;wn(4);for(var i=0;i<x.length;i++)w(x[i],'symbol');}break;}}
   var n=calcN(x,null);
+  console.log("clacN(x,null):",n);
   var ab=new ArrayBuffer(8+n);
+  console.log("ab:",ab);
   ub=new Uint8Array(ab);
+  console.log("ub:",ub);
   wb(1);wb(0);wb(0);wb(0);ib[0]=ub.length;wn(4);w(x,null);
   return ab;}

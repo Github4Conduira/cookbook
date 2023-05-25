@@ -317,42 +317,82 @@ usagereport:{[startdate;enddate;regionfilter;custfilter;groupings;pivot]
           `date`meterid!`date`meterid];
  /- and the where clause 
  meterwc:(enlist (within;`date;(enlist;startdate;enddate+1))) , $[count ids; enlist (in;`meterid;enlist ids);()];
- 
+ show "#######meterwc:######";
+ show meterwc;
+ show "###.q.first###";
+ show .q.first;
+ show "###enlist(.q.first;`usage)####";
+ show enlist(.q.first;`usage);
  /- run the query
  use:eval(?;`meter;enlist meterwc;bygrp;(enlist `usage)!enlist(.q.first;`usage));
- 
+ show "###USE-1###";
+ show use;
+ show "Count of USE:";
+ show count use;
  /- calculate the differences, and shift by one to get the actual change in value for that meter
  use:update usage:next deltas[first usage;usage] by meterid from use;
-
+ show "###USE-2###";
+ show use;
+ show "Count of USE:";
+ show count use;
+/  -1 "use:"use
  /- drop out the last day
  use:select from use where date<enddate+1;
- 
+ show "###USE-3###";
+ show use;
+ show "Count of USE:";
+ show count use;
  /- build the grouping clause dynamically, depending on input
  /- the pivot column should always be in the groupings 
  /- have to check we can handle the input
  /- use functional form
  grps:groupings inter `date`region`custtype`hour;
+ show "###Groups####";
+ show grps;
+ /-  0N!"grps:"grps;
  byclause:$[0=count grps; 0b; grps!grps];
+ show "###ByClause###";
+ show byclause;
+ /- 0N!"byclause:"byclause;
 
  /- these are the aggregations we want to calculate (if we are aggregating)
  aggs:`meterreadings`maxusage`minusage`avgusage`totalusage!((count;`usage);(max;`usage);(min;`usage);(avg;`usage);(sum;`usage));
-
+ show "#### Aggregation#####"
+ show aggs;
+ /- -1"aggs:"aggs;
+ /- -1"use:"use;
  /- if any of the static fields are in the groupings, join them on
+ /- -1"if condition:any`custtype`region in grps:"any`custtype`region in grps;
  if[any`custtype`region in grps; use:use lj static];
- 
+  show "###USE-4###";
+  show use ;
  /- re-aggregate the data, if necessary
  /- eval is equivalent to "select count usage, max usage, min usage, avg usage, sum usage, by grp1, grp2 ... from use"
+ /- -1"if condition:0<count grps:"0<count grps;
  if[0<count grps; use:`long$eval(?;use;();byclause;aggs)];
-
+ show "###USE-5###";
+  show use;
  /- pivot the data, if necessary
  /- example taken from code.kx.  Pivot field is the totalusage
  if[count pivot:first pivot; 
   /- if date is the pivot field, need to modify it to type symbol so it can be a column header
   if[pivot~`date; use:update date:`$string date from use];
   if[pivot~`hour; use:update hour:`$string hour from use];
+  / show (0!use);
+  show "####PIVOT#####";
+  show pivot;
   P:asc distinct (0!use) pivot;
-  use:0^eval(?;use;();pivot _ grps!grps;enlist(#;enlist P;(!;pivot;`totalusage)))];
-
+  show "###P Value####";
+  show P;
+  show "###enlist(#;enlist P;(!;pivot;`totalusage))###"
+  show enlist(#;enlist P;(!;pivot;`totalusage));
+  / show pivot _ grps!grps
+  use:0^eval(?;use;();pivot _ grps!grps;enlist(#;enlist P;(!;pivot;`totalusage)))
+  show "###USE-6###";
+  show use;
+  ] ;
+  show "###USE-7###";
+  show use;
  0!use}
 
 timeit:{[func;vars;maxsize]
