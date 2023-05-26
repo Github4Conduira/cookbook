@@ -299,10 +299,23 @@ usagereport:{[startdate;enddate;regionfilter;custfilter;groupings;pivot]
  /- but it will depend on whether regionfilter and custfilter are populated
  /- the ids will then be used as a filter into the meter table
  ids:$[0=count[regionfilter]+count custfilter;
-   	();
-	[staticwc:$[count regionfilter;enlist(in;`region;enlist regionfilter);()],$[count custfilter;enlist(in;`custtype;enlist custfilter);()];
-  	 eval(?;`static;enlist staticwc;();enlist`meterid)]];
-
+   	    ();
+	      
+        [
+          staticwc:
+          $[
+              count regionfilter;enlist(in;`region;enlist regionfilter);()
+          ],
+          $[
+              count custfilter;enlist(in;`custtype;enlist custfilter);()
+           ];
+  	      eval(?;`static;enlist staticwc;();enlist`meterid)
+        ]
+      ];
+  show "#####ids######";
+  show ids;
+  show "#####count ids####";
+  show count ids;
  /- extract the usage for each meter - need to go one day further
  /- group on hour if hour is specified in the groupings
  /- use the where filter if supplied
