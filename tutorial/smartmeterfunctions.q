@@ -324,20 +324,29 @@ usagereport:{[startdate;enddate;regionfilter;custfilter;groupings;pivot]
  /- i.e. the hour grouping and meter id filter are optional
  
  /- build the byclause
- bygrp:$[`hour in groupings:groupings,pivot;
- 	  / `date`meterid`hour!(`date;`meterid;(.q.xbar;0D01;`time));
-	  `date`meterid`hour!(`date;`meterid;`time.hh);
-          `date`meterid!`date`meterid];
+ bygrp:
+      $[
+          `hour in groupings:groupings,pivot;
+	        `date`meterid`hour!(`date;`meterid;`time.hh);
+          `date`meterid!`date`meterid
+      ];
+  show "####Grouping####";
+  show groupings;
+  show "#####bygrp#######";
+  show bygrp;
+
+
+  
  /- and the where clause 
  meterwc:(enlist (within;`date;(enlist;startdate;enddate+1))) , $[count ids; enlist (in;`meterid;enlist ids);()];
  show "#######meterwc:######";
  show meterwc;
- show "####enlist meterwc######";
- show enlist meterwc;
+
  show "###.q.first###";
  show .q.first;
  show "###enlist(.q.first;`usage)####";
  show enlist(.q.first;`usage);
+ '"Returning here";
  /- run the query
  use:eval(?;`meter;enlist meterwc;bygrp;(enlist `usage)!enlist(.q.first;`usage));
  show "###USE-1###";
